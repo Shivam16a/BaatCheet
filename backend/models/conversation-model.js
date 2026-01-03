@@ -1,0 +1,21 @@
+const mongoose = require("mongoose");
+
+const conversationShema = mongoose.Schema({
+    participants:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User"
+        }
+    ],
+    messages:[
+        {
+            type:mongoose.Schema.ObjectId,
+            ref:"Message",
+            default:[],
+        }
+    ]
+},{timeatamps:true});
+
+const Conversation = mongoose.model("Conversation",conversationShema);
+
+module.exports = Conversation;
