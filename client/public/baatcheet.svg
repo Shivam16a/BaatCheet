@@ -1,0 +1,19 @@
+<svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark circular background -->
+  <circle cx="110" cy="110" r="110" fill="#222222" />
+
+  <!-- Large B with microphone -->
+  <text x="60" y="108" font-family="Arial, sans-serif" font-weight="bold" font-size="85" fill="#FFD700" dominant-baseline="middle">
+    B
+  </text>
+  
+  <!-- Text "aat" next to B -->
+  <text x="115" y="110" font-family="Arial, sans-serif" font-weight="bold" font-size="48" fill="#FFD700" dominant-baseline="middle">
+    aat
+  </text>
+
+  <!-- Text "Cheet" below -->
+  <text x="110" y="160" font-family="Arial, sans-serif" font-weight="normal" font-size="40" fill="#FFD700" text-anchor="middle">
+    Cheet
+  </text>
+</svg>
