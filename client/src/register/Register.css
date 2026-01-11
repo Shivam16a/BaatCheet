@@ -1,0 +1,119 @@
+/* Center login card */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Glassmorphism card */
+.login-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    padding: 30px 25px;
+    max-width: 400px;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Card hover */
+.login-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Title */
+.login-title {
+    color: #fff;
+    font-weight: 700;
+    /* letter-spacing: 1px; */
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Form group */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels */
+.form-group label {
+    color: #fff;
+    /* margin-bottom: 5px; */
+    font-weight: 500;
+}
+
+/* Inputs */
+.form-group input {
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: #100f0f;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    font-size: 16px; 
+}
+
+/* Placeholder color */
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px; 
+}
+
+/* Input focus */
+.form-group input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    color: #100f0f;
+    font-size: 16px; 
+}
+
+/* Login button */
+.login-button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.login-button:hover {
+    background: rgba(255, 255, 255, 0.5);
+    color: #000;
+}
+
+/* Don't have account text */
+.dont-have-account {
+    text-align: center;
+    color: #fff;
+    margin-top: 15px;
+}
+
+.signup-link {
+    color: #00ffff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .login-card {
+        padding: 25px 15px;
+    }
+}
