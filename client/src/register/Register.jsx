@@ -1,15 +1,59 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import "./Register.css"
+import { toast } from 'react-toastify';
+
+
+const url = "http://localhost:5500/api/auth/register";
 
 const Register = () => {
+    const navigate = useNavigate();
+    const [user, setUser] = useState({
+        username: "",
+        email: "",
+        phone: "",
+        gender: "",
+        password: "",
+    });
 
     const handlechange = (e) => {
-
+        let name = e.target.name;
+        let value = e.target.value;
+        setUser({
+            ...user,
+            [name]: value
+        })
     }
 
     const handlesubmit = async (e) => {
-
+        e.preventDefault();
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(user),
+                credentials: "include"
+            })
+            const res_data = await response.json();
+            console.log(response);
+            if (response.ok) {
+                setUser({
+                    username: "",
+                    email: "",
+                    phone: "",
+                    gender: "",
+                    password: "",
+                })
+                console.log(res_data);
+                toast.success(res_data.msg);
+                navigate("/login");
+            }
+            else{
+                toast.error(res_data.msg);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return <>
@@ -28,7 +72,7 @@ const Register = () => {
                             required={true}
                             autoComplete="off"
                             className="fs-5 fw-bolder"
-                            // value={user.username}
+                            value={user.username}
                             onChange={handlechange}
                         />
                     </div>
@@ -43,7 +87,7 @@ const Register = () => {
                             required={true}
                             autoComplete="off"
                             className="fs-5 fw-bolder"
-                            // value={user.email}
+                            value={user.email}
                             onChange={handlechange}
                         />
                     </div>
@@ -58,7 +102,7 @@ const Register = () => {
                             required={true}
                             autoComplete="off"
                             className="fs-5 fw-bolder"
-                            // value={user.phone}
+                            value={user.phone}
                             onChange={handlechange}
                         />
                     </div>
@@ -71,6 +115,7 @@ const Register = () => {
                                     type="radio"
                                     name="gender"
                                     value="male"
+                                    checked={user.gender === "male"}
                                     onChange={handlechange}
                                     required
                                 />{" "}
@@ -81,6 +126,7 @@ const Register = () => {
                                     type="radio"
                                     name="gender"
                                     value="female"
+                                    checked={user.gender === "female"}
                                     onChange={handlechange}
                                 />{" "}
                                 Female
@@ -90,6 +136,7 @@ const Register = () => {
                                     type="radio"
                                     name="gender"
                                     value="other"
+                                    checked={user.gender === "other"}
                                     onChange={handlechange}
                                 />{" "}
                                 Other
