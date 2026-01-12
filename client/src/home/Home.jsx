@@ -15,11 +15,24 @@ const Home = () => {
     }
 
     return (
-        <section className="container">
+        <section className="container" style={{ border: "1px solid transparent" }}>
             <div className="container glass row row-cols-2 ">
                 <div className="left">
-                    <h1>sidebar</h1>
-                    <p>Hi {user.username}</p>
+                    <div className="container-fluid">
+                        <form className="d-flex searchbtn">
+                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                            <button className="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                        <hr style={{ color: "#fff" }} />
+                        <div className="avtar">
+                            <div className="profipic">
+                                <img src={user.profilePic} alt="imge.png" height={70} width={70} />
+                                <p>{user.username}</p>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
                 <div className="right">
                     <h1>message</h1>

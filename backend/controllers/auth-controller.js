@@ -18,8 +18,8 @@ const register = async (req, res) => {
         const encodedUsername = encodeURIComponent(username);
         const defaultProfilePic =
             gender === "male"
-                ? `https://avatar.iran.liara.run/public/boy?username=${encodedUsername}`
-                : `https://avatar.iran.liara.run/public/girl?username=${encodedUsername}`;
+                ? `https://api.dicebear.com/6.x/adventurer/svg?seed=${encodedUsername}`
+                : `https://api.dicebear.com/6.x/adventurer/svg?seed=${encodedUsername}`;
 
         const newUser = await User.create({
             username,

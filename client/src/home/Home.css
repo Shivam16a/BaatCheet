@@ -9,7 +9,22 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     color: black;
-    margin: 10px;
-    border: 2px solid green;
-    min-height: 95vh;
+    /* border: 2px solid green; */
+    min-height: 97vh;
+}
+.left{
+    border-right: 1px solid #ccc;
+}
+.searchbtn{
+    margin: 10px 0px 10px 0px;
+}
+.profipic{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    border-radius: 10px;
+    border: 2px solid red;
+    p{
+        font-size: 25px;
+    }
 }
