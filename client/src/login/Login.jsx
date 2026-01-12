@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { toast } from 'react-toastify';
-
+import { useAuth } from "../context/authContext";
 
 const url = "http://localhost:5500/api/auth/login";
 
 const Login = () => {
     const navigate = useNavigate();
+    const { storeTokenInLS } = useAuth();
     const [user, setUser] = useState({
         email: "",
         password: "",
@@ -37,12 +38,13 @@ const Login = () => {
                     password: "",
                 })
                 console.log(res_data);
+                storeTokenInLS(res_data.token);
                 toast.success(res_data.msg);
                 navigate("/");
-            }else{
+            } else {
                 toast.error(res_data.msg);
             }
-            
+
         } catch (error) {
             console.log(error);
             toast.error(error);

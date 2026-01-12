@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import "./Register.css"
 import { toast } from 'react-toastify';
+import { useAuth } from '../context/authContext';
 
 
 const url = "http://localhost:5500/api/auth/register";
 
 const Register = () => {
+
+    const { storeTokenInLS } = useAuth();
     const navigate = useNavigate();
     const [user, setUser] = useState({
         username: "",
@@ -24,7 +27,6 @@ const Register = () => {
             [name]: value
         })
     }
-
     const handlesubmit = async (e) => {
         e.preventDefault();
         try {
@@ -44,11 +46,12 @@ const Register = () => {
                     gender: "",
                     password: "",
                 })
+                storeTokenInLS(res_data.token)
                 console.log(res_data);
                 toast.success(res_data.msg);
                 navigate("/login");
             }
-            else{
+            else {
                 toast.error(res_data.msg);
             }
         } catch (error) {
@@ -93,7 +96,7 @@ const Register = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="phone">Email address</label>
+                        <label htmlFor="phone">Phone</label>
                         <input
                             type="number"
                             id="phone"
@@ -154,7 +157,7 @@ const Register = () => {
                             required={true}
                             autoComplete="off"
                             className="fs-5 fw-bolder"
-                            // value={user.password}
+                            value={user.password}
                             onChange={handlechange}
                         />
                     </div>

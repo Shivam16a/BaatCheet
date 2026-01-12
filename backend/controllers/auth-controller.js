@@ -70,4 +70,13 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { register, login };
+const user = async (req, res) => {
+    try {
+        return res.status(200).json(req.user);
+    } catch (error) {
+        return res.status(500).json({ msg: "Something went wrong" });
+    }
+};
+
+
+module.exports = { register, login, user };

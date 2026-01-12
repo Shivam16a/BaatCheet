@@ -11,7 +11,7 @@ const islogin = async (req, res, next) => {
         const isVerified = jwt.verify(jwtToken, process.env.JWT_SECRET);
         const userData = await User.findById(isVerified.userId).select("-password");
         if(!userData) return res.status(401).json({msg:"user not found"});
-        req.userData = userData;
+        req.user = userData;
         next();
     } catch (error) {
         console.log({error:"error in isLogin middleware"});
