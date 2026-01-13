@@ -96,10 +96,11 @@
 
 /* Each user row */
 .user-row {
-    background-color: #f8f9fa;
-    /* light background */
     border-bottom: 1px solid #dee2e6;
-    /* underline */
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
 }
 
 /* Remove last underline */
@@ -113,9 +114,19 @@
     padding: 2px;
 }
 
+.avatar.d-flex {
+    gap: 15px;
+}
+
+.user-row.active {
+    background-color: #0d6efd !important;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
 /* Hover effect */
 .user-row:hover {
-    background-color: #e9ecef;
+    background-color: #f1f3f5;
 }
 
 /* Active (selected user) */

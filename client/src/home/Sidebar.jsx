@@ -82,7 +82,14 @@ const Sidebar = () => {
                     placeholder="Search users"
                     aria-label="Search"
                     value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
+                    onChange={(e) => {
+                        setSearchInput(e.target.value);
+
+                        // If input is cleared, reset searchUser
+                        if (e.target.value.trim() === "") {
+                            setSearchUser([]);
+                        }
+                    }}
                 />
                 <button className="btn btn-primary search-btn" type="submit">Search</button>
                 <img
@@ -96,9 +103,39 @@ const Sidebar = () => {
             <div>
                 {searchUser?.length > 0 ? (
                     <>
-                        <div>
+                        <div className="list-group">
+                            {searchUser.map((user) => (
+                                <div
+                                    key={user._id}
+                                    className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""
+                                        }`}
+                                    onClick={() => handeluserchick(user)}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <div className="avatar d-flex align-items-center gap-3">
+
+                                        {/* Profile Pic */}
+                                        <div className="avatar-img">
+                                            <img
+                                                src={user.profilePic}
+                                                alt={user.username}
+                                                className="rounded-circle"
+                                                width={45}
+                                                height={45}
+                                            />
+                                        </div>
+
+                                        {/* Username */}
+                                        <div className="avatar-name">
+                                            <span>{user.username}</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            ))}
 
                         </div>
+                        {/* <hr style={{ color: "#fff" }} /> */}
                     </>
                 ) : (
                     <>
@@ -114,38 +151,39 @@ const Sidebar = () => {
                                 ) : (
                                     <>
                                         <div className="list-group">
-                                            {chatUser.map((user) => (
-                                                <div
-                                                    key={user._id}
-                                                    className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""
-                                                        }`}
-                                                    onClick={() => handeluserchick(user)}
-                                                    style={{ cursor: "pointer" }}
-                                                >
-                                                    <div className="avatar d-flex align-items-center gap-3">
-
-                                                        {/* Profile Pic */}
-                                                        <div className="avatar-img">
-                                                            <img
-                                                                src={user.profilePic}
-                                                                alt={user.username}
-                                                                className="rounded-circle"
-                                                                width={45}
-                                                                height={45}
-                                                            />
+                                            {chatUser.map((user, index) => (
+                                                <React.Fragment key={user._id}>
+                                                    <div
+                                                        className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""
+                                                            }`}
+                                                        onClick={() => handeluserchick(user)}
+                                                    >
+                                                        <div className="avatar d-flex align-items-center gap-3">
+                                                            <div className="avatar-img">
+                                                                <img
+                                                                    src={user.profilePic}
+                                                                    alt={user.username}
+                                                                    className="rounded-circle"
+                                                                    width={45}
+                                                                    height={45}
+                                                                />
+                                                            </div>
+                                                            <div className="avatar-name">
+                                                                <span>{user.username}</span>
+                                                            </div>
                                                         </div>
-
-                                                        {/* Username */}
-                                                        <div className="avatar-name">
-                                                            <span>{user.username}</span>
-                                                        </div>
-
                                                     </div>
-                                                </div>
+
+                                                    {/* Divider line */}
+                                                    {index !== chatUser.length - 1 && (
+                                                        <hr style={{ color: "red" }} />
+                                                    )}
+                                                </React.Fragment>
                                             ))}
-                                            
+
+
                                         </div>
-                                        <hr style={{ color: "#fff" }} />
+                                        {/* <hr style={{ color: "#fff" }} /> */}
                                     </>
                                 )}
                             </div>
