@@ -4,7 +4,7 @@ const Conversation = require("../models/conversation-model.js");
 const searchUsers = async (req, res) => {
     try {
         const search = req.query.search || ``;
-        const CurrentUserId = req.userData._id;
+        const CurrentUserId = req.user._id;
         const user = await User.find({
             $and: [
                 {
@@ -26,7 +26,7 @@ const searchUsers = async (req, res) => {
 
 const getCurrentChatters = async (req, res) => {
     try {
-        const currentUserId = req.userData._id;
+        const currentUserId = req.user._id;
 
         // 1️⃣ Recent conversations (active chats top pe)
         const conversations = await Conversation.find({

@@ -9,7 +9,6 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     color: black;
-    /* border: 2px solid green; */
     min-height: 97vh;
 }
 .left{
@@ -18,13 +17,25 @@
 .searchbtn{
     margin: 10px 0px 10px 0px;
 }
-.profipic{
+
+.searchuserprofile{
+    min-height: 70%;
+    max-height: 80%;
+    overflow-y: auto;
+}
+.userprofile{
+    width: auto;
+}
+.emptymessage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.userschatprofile{
     display: flex;
     align-items: center;
-    flex-direction: row;
     border-radius: 10px;
-    border: 2px solid red;
-    p{
-        font-size: 25px;
-    }
+    padding: 10px;
+    cursor: pointer;
 }
