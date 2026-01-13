@@ -7,7 +7,7 @@ import Message from "./Message";
 const Home = () => {
     const { user, loading, isLoggedIn } = useAuth();
 
-    console.log(user);
+    // console.log(user);
     if (loading) {
         return <h2 className="text-dark fw-bold">Loading...</h2>;
     }

@@ -12,6 +12,7 @@ const Sidebar = () => {
     const [searchInput, setSearchInput] = useState('');
     const [searchUser, setSearchUser] = useState([]);
     const [chatUser, setChatUser] = useState([]);
+    const [selestedUserId, setSelectedUserId] = useState(null);
     const token = localStorage.getItem("token");
 
 
@@ -38,17 +39,20 @@ const Sidebar = () => {
 
     const handleSearchSubmit = async (e) => {
         e.preventDefault();
-
+        if(!searchInput.trim()){
+            toast.warning("Please enter a username to search");
+            return;
+        }
         try {
-            const response = await fetch(`http://localhost:5500/api/user/search?search=${searchInput}`, {
+            const response = await fetch(`http://localhost:5500/api/user/search?search=${encodeURIComponent(searchInput)}`, {
                 method: "GET",
                 headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
             const data = await response.json();
+            console.log(data);
             setSearchUser(data);
             if (data.length === 0) {
                 console.log(data);
@@ -62,27 +66,29 @@ const Sidebar = () => {
             toast.info(error);
         }
     }
-    // console.log(searchUser);
+
+    const handeluserchick = (user) => {
+        setSelectedUserId(user._id);
+        console.log("Selected user:", user);
+    }
+
     const { user } = useAuth();
     return <>
         <div className="container-fluid">
-            <form className="d-flex searchbtn" onSubmit={handleSearchSubmit}>
+            <form className="d-flex searchbtn align-items-center p-2" onSubmit={handleSearchSubmit}>
                 <input
-                    className="form-control me-2"
+                    className="form-control me-2 search-input"
                     type="search"
-                    placeholder="Search"
+                    placeholder="Search users"
                     aria-label="Search"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                 />
-                <button className="btn btn-outline-success" type="submit">Search</button>
+                <button className="btn btn-primary search-btn" type="submit">Search</button>
                 <img
                     src={user.profilePic}
                     alt="user"
-                    height={50}
-                    width={50}
-                    className='border border-rounded'
-                    style={{ margin: "5px", display: "flex", alignItems: "center", cursor: "pointer" }}
+                    className="rounded-circle profile-pic ms-3"
                     onClick={() => navigate(`/profile/${user?._id}`)}
                 />
             </form>
@@ -107,15 +113,37 @@ const Sidebar = () => {
                                     </>
                                 ) : (
                                     <>
-                                        {chatUser.map((user, index) => {
-                                            <div key={user._id}>
-                                                <div className='userschatprofile'
-                                                onClick={()=>handeluserchick(user)}
+                                        <div className="list-group">
+                                            {chatUser.map((user) => (
+                                                <div
+                                                    key={user._id}
+                                                    className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""
+                                                        }`}
+                                                    onClick={() => handeluserchick(user)}
                                                 >
+                                                    <div className="avatar d-flex align-items-center gap-3">
 
+                                                        {/* Profile Pic */}
+                                                        <div className="avatar-img">
+                                                            <img
+                                                                src={user.profilePic}
+                                                                alt={user.username}
+                                                                className="rounded-circle"
+                                                                width={45}
+                                                                height={45}
+                                                            />
+                                                        </div>
+
+                                                        {/* Username */}
+                                                        <div className="avatar-name">
+                                                            <span>{user.username}</span>
+                                                        </div>
+
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        })}
+                                            ))}
+                                        </div>
+
                                     </>
                                 )}
                             </div>

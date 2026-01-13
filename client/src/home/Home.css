@@ -11,31 +11,119 @@
     color: black;
     min-height: 97vh;
 }
-.left{
+
+.left {
     border-right: 1px solid #ccc;
 }
-.searchbtn{
-    margin: 10px 0px 10px 0px;
+
+/* Form wrapper */
+.searchbtn {
+    background-color: #f8f9fa;
+    /* light gray background */
+    border-radius: 10px;
+    padding: 10px 15px;
+    gap: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
 }
 
-.searchuserprofile{
+/* Input box */
+.search-input {
+    flex: 1;
+    /* take remaining space */
+    border-radius: 50px;
+    padding: 8px 15px;
+    border: 1px solid #ced4da;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
+}
+
+/* Search button */
+.search-btn {
+    border-radius: 50px;
+    padding: 6px 20px;
+    transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+    background-color: #0b5ed7;
+    border-color: #0b5ed7;
+}
+
+/* Profile picture */
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border: 2px solid #dee2e6;
+    transition: transform 0.2s ease;
+}
+
+.profile-pic:hover {
+    transform: scale(1.1);
+}
+
+
+.searchuserprofile {
     min-height: 70%;
     max-height: 80%;
     overflow-y: auto;
 }
-.userprofile{
+
+.userprofile {
     width: auto;
 }
-.emptymessage{
+
+.emptymessage {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
-.userschatprofile{
+
+.userschatprofile {
     display: flex;
     align-items: center;
     border-radius: 10px;
     padding: 10px;
     cursor: pointer;
+}
+
+/* Each user row */
+.user-row {
+    background-color: #f8f9fa;
+    /* light background */
+    border-bottom: 1px solid #dee2e6;
+    /* underline */
+}
+
+/* Remove last underline */
+.user-row:last-child {
+    border-bottom: none;
+}
+
+/* Profile image border */
+.avatar-img img {
+    border: 2px solid #dee2e6;
+    padding: 2px;
+}
+
+/* Hover effect */
+.user-row:hover {
+    background-color: #e9ecef;
+}
+
+/* Active (selected user) */
+.list-group-item.active.user-row {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd;
+}
+
+.list-group-item.active .avatar-name span {
+    color: #fff;
 }
