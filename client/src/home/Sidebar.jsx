@@ -39,7 +39,7 @@ const Sidebar = () => {
 
     const handleSearchSubmit = async (e) => {
         e.preventDefault();
-        if(!searchInput.trim()){
+        if (!searchInput.trim()) {
             toast.warning("Please enter a username to search");
             return;
         }
@@ -120,6 +120,7 @@ const Sidebar = () => {
                                                     className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""
                                                         }`}
                                                     onClick={() => handeluserchick(user)}
+                                                    style={{ cursor: "pointer" }}
                                                 >
                                                     <div className="avatar d-flex align-items-center gap-3">
 
@@ -142,8 +143,9 @@ const Sidebar = () => {
                                                     </div>
                                                 </div>
                                             ))}
+                                            
                                         </div>
-
+                                        <hr style={{ color: "#fff" }} />
                                     </>
                                 )}
                             </div>
