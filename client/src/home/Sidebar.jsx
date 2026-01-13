@@ -72,9 +72,24 @@ const Sidebar = () => {
         console.log("Selected user:", user);
     }
 
-    const { user } = useAuth();
+    const handelclickback = () => {
+        setSearchUser([]);
+        setSearchInput('');
+    }
+    const handleLogout = () => {
+        const confirmlogout = window.prompt(`Type "${user.username}" To Logout`);
+        if (confirmlogout === user.username) {
+            logoutUser();
+            toast.success("you logout successfully");
+        } else if (confirmlogout !== user.username) {
+            toast.warning("Enter wright user name");
+        } else {
+            toast.info("Logout Cancel")
+        }
+    }
+    const { user, logoutUser } = useAuth();
     return <>
-        <div className="container-fluid">
+        <div className="container-fluid" style={{ marginTop: "1rem" }}>
             <form className="d-flex searchbtn align-items-center p-2" onSubmit={handleSearchSubmit}>
                 <input
                     className="form-control me-2 search-input"
@@ -93,7 +108,7 @@ const Sidebar = () => {
                 />
                 <button className="btn btn-primary search-btn" type="submit">Search</button>
                 <img
-                    src={user.profilePic}
+                    src={user.profilePic || "/default-profile.png"}
                     alt="user"
                     className="rounded-circle profile-pic ms-3"
                     onClick={() => navigate(`/profile/${user?._id}`)}
@@ -103,39 +118,41 @@ const Sidebar = () => {
             <div>
                 {searchUser?.length > 0 ? (
                     <>
-                        <div className="list-group">
-                            {searchUser.map((user) => (
-                                <div
-                                    key={user._id}
-                                    className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""
-                                        }`}
-                                    onClick={() => handeluserchick(user)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div className="avatar d-flex align-items-center gap-3">
+                        <div className="sidebar-container d-flex flex-column"   >
 
-                                        {/* Profile Pic */}
-                                        <div className="avatar-img">
-                                            <img
-                                                src={user.profilePic}
-                                                alt={user.username}
-                                                className="rounded-circle"
-                                                width={45}
-                                                height={45}
-                                            />
+                            {/* Users list */}
+                            <div className="list-group flex-grow-1 overflow-auto">
+                                {searchUser.map((user) => (
+                                    <div
+                                        key={user._id}
+                                        className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""}`}
+                                        onClick={() => handeluserchick(user)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <div className="avatar d-flex align-items-center gap-3">
+                                            <div className="avatar-img">
+                                                <img
+                                                    src={user.profilePic || "/default-profile.png"}
+                                                    alt={user.username}
+                                                    className="rounded-circle"
+                                                    width={45}
+                                                    height={45}
+                                                />
+                                            </div>
+                                            <div className="avatar-name">
+                                                <span>{user.username}</span>
+                                            </div>
                                         </div>
-
-                                        {/* Username */}
-                                        <div className="avatar-name">
-                                            <span>{user.username}</span>
-                                        </div>
-
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
 
+                            {/* Bottom fixed icon */}
+                            <div className="sidebar-bottom-icon" onClick={handelclickback}>
+                                <i className="fas fa-arrow-circle-left"></i>
+                            </div>
                         </div>
-                        {/* <hr style={{ color: "#fff" }} /> */}
+
                     </>
                 ) : (
                     <>
@@ -183,7 +200,11 @@ const Sidebar = () => {
 
 
                                         </div>
-                                        {/* <hr style={{ color: "#fff" }} /> */}
+                                        <div className="logout-btn d-flex align-items-center gap-2" onClick={handleLogout}>
+                                            <i className="fas fa-sign-out-alt fa-flip-horizontal"></i>
+                                            <span>Logout</span>
+                                        </div>
+
                                     </>
                                 )}
                             </div>

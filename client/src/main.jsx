@@ -7,7 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 createRoot(document.getElementById('root')).render(
   <AuthContextProvider>
     <StrictMode>
-      <App />
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -21,6 +20,7 @@ createRoot(document.getElementById('root')).render(
         theme="colored"
         toastStyle={{ fontSize: "1.2rem" }}
       />
+      <App />
     </StrictMode>,
   </AuthContextProvider>
 )

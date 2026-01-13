@@ -1,7 +1,8 @@
-* {
+html,
+body {
+    height: 100%;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 .glass {
@@ -10,6 +11,7 @@
     -webkit-backdrop-filter: blur(12px);
     color: black;
     min-height: 97vh;
+    overflow: hidden;
 }
 
 .left {
@@ -30,7 +32,6 @@
 /* Input box */
 .search-input {
     flex: 1;
-    /* take remaining space */
     border-radius: 50px;
     padding: 8px 15px;
     border: 1px solid #ced4da;
@@ -136,5 +137,62 @@
 }
 
 .list-group-item.active .avatar-name span {
+    color: #fff;
+}
+
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.list-group {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* Scroll if list is long */
+}
+
+/* Bottom icon */
+.sidebar-bottom-icon {
+    text-align: center;
+    padding: 15px 0;
+    cursor: pointer;
+    font-size: 1.8rem;
+    color: #0d6efd;
+    /* Bootstrap primary color */
+    transition: color 0.2s ease;
+    display: flex;
+    bottom: 0;
+    position: fixed;
+}
+
+.sidebar-bottom-icon:hover {
+    color: #fff;
+    /* Hover turns white */
+}
+
+.logout-btn {
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #0d6efd;
+    /* Bootstrap primary */
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+    /* optional spacing from list */
+    display: flex;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+}
+
+.logout-btn i {
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #0d6efd;
     color: #fff;
 }
