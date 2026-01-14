@@ -15,7 +15,7 @@ const Sidebar = () => {
     const [chatUser, setChatUser] = useState([]);
     const [selestedUserId, setSelectedUserId] = useState(null);
 
-    const {messages,selectedConversation,setSelectedConversation}=userConversation();
+    const { setSelectedConversation } = userConversation();
     const token = localStorage.getItem("token");
 
 
@@ -25,7 +25,7 @@ const Sidebar = () => {
                 const chatters = await fetch(`http://localhost:5500/api/user/correntChatters`, {
                     method: "GET",
                     headers: {
-                        "Authorization": `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     }
                 });
@@ -38,7 +38,7 @@ const Sidebar = () => {
         }
         chaUserHandler();
     }, []);
-    console.log(chatUser);
+    // console.log(chatUser);
 
     const handleSearchSubmit = async (e) => {
         e.preventDefault();
@@ -73,7 +73,7 @@ const Sidebar = () => {
     const handeluserchick = (user) => {
         setSelectedConversation(user);
         setSelectedUserId(user._id);
-        console.log("Selected user:", user);
+        // console.log("Selected user:", user);
     }
 
     const handelclickback = () => {
@@ -152,9 +152,13 @@ const Sidebar = () => {
                             </div>
 
                             {/* Bottom fixed icon */}
-                            <div className="sidebar-bottom-icon" onClick={handelclickback}>
+                            <div className="logout-btn d-flex align-items-center gap-2" onClick={handelclickback}>
                                 <i className="fas fa-arrow-circle-left"></i>
+                                <span>Back search</span>
                             </div>
+                            {/* <div className="sidebar-bottom-icon" onClick={handelclickback}>
+                                <i className="fas fa-arrow-circle-left"></i>
+                            </div> */}
                         </div>
 
                     </>

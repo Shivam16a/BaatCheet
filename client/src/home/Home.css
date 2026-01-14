@@ -15,7 +15,7 @@ body {
 }
 
 .left {
-    border-right: 1px solid #ccc;
+    border-right: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 /* Form wrapper */
