@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import { toast } from "react-toastify"
+import userConversation from "../zustand/userConversation";
 import "./Home.css"
 
 
@@ -13,6 +14,8 @@ const Sidebar = () => {
     const [searchUser, setSearchUser] = useState([]);
     const [chatUser, setChatUser] = useState([]);
     const [selestedUserId, setSelectedUserId] = useState(null);
+
+    const {messages,selectedConversation,setSelectedConversation}=userConversation();
     const token = localStorage.getItem("token");
 
 
@@ -68,6 +71,7 @@ const Sidebar = () => {
     }
 
     const handeluserchick = (user) => {
+        setSelectedConversation(user);
         setSelectedUserId(user._id);
         console.log("Selected user:", user);
     }
