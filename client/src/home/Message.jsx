@@ -13,18 +13,18 @@ const Message = () => {
   const [logingMessages, setLodingMessages] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendData, setSendData] = useState("");
-  const {socket} = useSocketContext();
+  const { socket } = useSocketContext();
 
 
-  useEffect(()=>{
-    socket?.on("newMessage",(newMessage)=>{
+  useEffect(() => {
+    socket?.on("newMessage", (newMessage) => {
       const sound = new Audio(notify);
       sound.play();
-      setMessages([...messages,newMessage])
+      setMessages([...messages, newMessage])
     })
 
-    return ()=>socket?.off("newMessage");
-  },[socket,setMessages,messages])
+    return () => socket?.off("newMessage");
+  }, [socket, setMessages, messages])
 
   useEffect(() => {
     if (!selectedConversation?._id) return;
@@ -86,7 +86,7 @@ const Message = () => {
       const data = await response.json();
 
       // message list update
-      setMessages([...messages,data]);
+      setMessages([...messages, data]);
 
       setSendData("");
       setSending(false);
@@ -102,17 +102,15 @@ const Message = () => {
   return (
     <div
       style={{
-        height: "97vh",
+        height: "100vh",
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center"
       }}
     >
       {selectedConversation === null ? (
         <div
-          className='d-flex flex-column justify-content-center align-items-center text-center'
+          className='d-flex flex-column justify-content-center align-items-center text-center flex-grow-1'
         >
           <p className='fw-bolder fs-2'>Hii! 👋 {user?.username} 🥰</p>
           <p className='fw-bolder fs-2'>Select user to start chat</p>
@@ -122,8 +120,8 @@ const Message = () => {
         <div className="w-100 h-100">
           {/* ===== Chat Header / User Profile ===== */}
           <div
-            className="bg-primary text-white d-flex align-items-center px-2 gap-3 rounded-3 mt-4"
-            style={{ margin: "8px" }}
+            className="bg-primary text-white d-flex align-items-center gap-3 rounded-3 mt-4"
+            style={{ margin: "5px" }}
           >
             <i
               className="fas fa-arrow-left fs-4"
@@ -150,10 +148,9 @@ const Message = () => {
           <div
             className="p-3"
             style={{
-              height: "calc(97vh - 95px)",
+              height: "calc(100vh - 130px)",
               overflowY: "auto",
               flex: 1,
-              padding: "1rem",
             }}
           >
             {logingMessages ? (
@@ -196,15 +193,16 @@ const Message = () => {
                     >
                       <p className="mb-1">{msg.message}</p>
 
-                      <div
-                        className={`text-end small ${isMyMessage ? "text-white-50" : "text-muted"
-                          }`}
-                      >
-                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                      <div className={`text-end small ${isMyMessage ? "text-white-50" : "text-muted"}`}>
+                        {new Date(msg.createdAt).toLocaleString([], {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "2-digit",
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
                       </div>
+
                     </div>
 
                   </div>
@@ -215,7 +213,7 @@ const Message = () => {
             <div ref={messagesEndRef} />
 
           </div>
-          <form onSubmit={handelSubmit} className="p-2 border-top">
+          <form onSubmit={handelSubmit} className=" border-top">
             <div className="input-group">
               <input
                 type="text"

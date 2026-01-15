@@ -10,8 +10,7 @@ body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     color: black;
-    min-height: 97vh;
-    overflow: hidden;
+    min-height: 100vh;
 }
 
 .left {
@@ -71,29 +70,30 @@ body {
 
 
 .searchuserprofile {
-    min-height: 70%;
-    max-height: 80%;
-    overflow-y: auto;
+    height: 100vh;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
+
+/* smooth scroll */
+.userprofile::-webkit-scrollbar {
+    width: 6px;
+}
+
+.userprofile::-webkit-scrollbar-thumb {
+    background-color: #6c757d;
+    border-radius: 10px;
+}
+
 
 .userprofile {
-    width: auto;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 60px;
 }
 
-.emptymessage {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.userschatprofile {
-    display: flex;
-    align-items: center;
-    border-radius: 10px;
-    padding: 10px;
-    cursor: pointer;
-}
 
 /* Each user row */
 .user-row {
@@ -147,6 +147,7 @@ body {
 }
 
 .list-group {
+    max-height: calc(100vh - 180px);
     flex-grow: 1;
     overflow-y: auto;
     /* Scroll if list is long */
@@ -172,19 +173,15 @@ body {
 }
 
 .logout-btn {
+    position: absolute;
+    bottom: 0;
+    margin-top: auto;
+    /* pushes it to bottom */
     padding: 10px 15px;
     border-radius: 8px;
     cursor: pointer;
     color: #0d6efd;
-    /* Bootstrap primary */
     font-weight: 500;
-    transition: all 0.2s ease;
-    margin-top: 10px;
-    /* optional spacing from list */
-    display: flex;
-    align-items: center;
-    position: fixed;
-    bottom: 0;
 }
 
 .logout-btn i {

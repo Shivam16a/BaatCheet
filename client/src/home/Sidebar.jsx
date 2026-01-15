@@ -21,9 +21,10 @@ const Sidebar = () => {
     const token = localStorage.getItem("token");
     const { user: authUser, logoutUser } = useAuth();
 
-    const nowOnline = chatUser.map((user) => (user._id));
+    const isUserOnline = (userId) => {
+        return onlineUser?.includes(userId);
+    };
 
-    const isOnline = nowOnline.map(userId => onlineUser.includes(userId));
 
     useEffect(() => {
         socket?.on("newMessage", (newMessage) => {
@@ -99,15 +100,15 @@ const Sidebar = () => {
         if (confirmlogout === authUser.username) {
             logoutUser();
             toast.success("you logout successfully");
-        } else if (confirmlogout !== user.username) {
+        } else if (confirmlogout !== authUser.username) {
             toast.warning("Enter wright user name");
         } else {
             toast.info("Logout Cancel")
         }
     }
     return <>
-        <div className="container-fluid" style={{ marginTop: "1rem" }}>
-            <form className="d-flex searchbtn align-items-center p-2" onSubmit={handleSearchSubmit}>
+        <div className="container-fluid">
+            <form className="d-flex searchbtn align-items-center" onSubmit={handleSearchSubmit}>
                 <input
                     className="form-control me-2 search-input"
                     type="search"
@@ -139,7 +140,7 @@ const Sidebar = () => {
 
                             {/* Users list */}
                             <div className="list-group flex-grow-1 overflow-auto">
-                                {searchUser.map((user, index) => (
+                                {searchUser.map((user) => (
                                     <div
                                         key={user._id}
                                         className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""}`}
@@ -147,7 +148,7 @@ const Sidebar = () => {
                                         style={{ cursor: "pointer" }}
                                     >
                                         <div className="avatar d-flex align-items-center gap-3">
-                                            <div className={`avatar-img ${isOnline[index] ? 'online' : ''}`}>
+                                            <div className={`avatar-img ${isUserOnline(user._id) ? 'online' : ''}`}>
                                                 <img
                                                     src={user.profilePic || "/default-profile.png"}
                                                     alt={user.username}
@@ -163,41 +164,37 @@ const Sidebar = () => {
                                     </div>
                                 ))}
                             </div>
-
-                            {/* Bottom fixed icon */}
-                            <div className="logout-btn d-flex align-items-center gap-2" onClick={handelclickback}>
-                                <i className="fas fa-arrow-circle-left"></i>
-                                <span>Back search</span>
-                            </div>
-                            {/* <div className="sidebar-bottom-icon" onClick={handelclickback}>
-                                <i className="fas fa-arrow-circle-left"></i>
-                            </div> */}
                         </div>
-
+                        {/* Bottom fixed icon */}
+                        <div className="logout-btn d-flex align-items-center gap-2" onClick={handelclickback}>
+                            <i className="fas fa-arrow-circle-left"></i>
+                            <span>Back search</span>
+                        </div>
                     </>
                 ) : (
                     <>
-                        <div className='searchuserprofile'>
-                            <div className='userprofile'>
+                        <div className='searchuserprofile d-flex flex-column h-100'>
+                            <div className='userprofile flex-grow-1'>
                                 {chatUser.length === 0 ? (
                                     <>
-                                        <div className='emptymessage'>
-                                            <h1>Why aru alone!!🤭</h1>
-                                            <h1>search username to chat</h1>
+                                        <div className='d-flex flex-column justify-content-center align-items-center text-center' style={{height:"calc(100vh - 130px)"}}>
+                                            <p className='fw-bolder fs-2'>Why are u alone!!🤭</p>
+                                            <p className='fw-bolder fs-2'>search username to chat any rendom user</p>
+                                            <i className="fas fa-users fs-1 text-dark"></i>
                                         </div>
                                     </>
                                 ) : (
                                     <>
-                                        <div className="list-group">
+                                        <div className="list-group list-group-flush rounded">
                                             {chatUser.map((user, index) => (
                                                 <React.Fragment key={user._id}>
                                                     <div
-                                                        className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""
+                                                        className={`list-group-item list-group-item-action d-flex align-items-center justify-content-between user-row ${selestedUserId === user._id ? "active" : ""
                                                             }`}
                                                         onClick={() => handeluserchick(user)}
                                                     >
                                                         <div className="avatar d-flex align-items-center gap-3" style={{ cursor: "pointer" }}>
-                                                            <div className={`avatar-img ${isOnline[index] ? 'online' : ''}`}>
+                                                            <div className={`avatar-img ${isUserOnline(user._id) ? 'online' : ''}`}>
                                                                 <img
                                                                     src={user.profilePic}
                                                                     alt={user.username}
@@ -228,17 +225,15 @@ const Sidebar = () => {
                                                     )}
                                                 </React.Fragment>
                                             ))}
-
-
-                                        </div>
-                                        <div className="logout-btn d-flex align-items-center gap-2" onClick={handleLogout}>
-                                            <i className="fas fa-sign-out-alt fa-flip-horizontal"></i>
-                                            <span>Logout</span>
                                         </div>
 
                                     </>
                                 )}
                             </div>
+                        </div>
+                        <div className="logout-btn d-flex align-items-center gap-2" onClick={handleLogout}>
+                            <i className="fas fa-sign-out-alt fa-flip-horizontal"></i>
+                            <span>Logout</span>
                         </div>
                     </>
                 )}
