@@ -16,7 +16,7 @@ const Sidebar = () => {
     const [chatUser, setChatUser] = useState([]);
     const [selestedUserId, setSelectedUserId] = useState(null);
     const [newMessage, setNewMessage] = useState();
-    const { messages, setMessages, setSelectedConversation } = userConversation();
+    const { messages, setSelectedConversation } = userConversation();
     const { onlineUser, socket } = useSocketContext();
     const token = localStorage.getItem("token");
     const { user: authUser, logoutUser } = useAuth();
@@ -52,7 +52,7 @@ const Sidebar = () => {
             }
         }
         chaUserHandler();
-    }, []);
+    }, [token]);
     // console.log(chatUser);
 
     const handleSearchSubmit = async (e) => {
@@ -74,7 +74,7 @@ const Sidebar = () => {
             setSearchUser(data);
             if (data.length === 0) {
                 console.log(data);
-                toast.info("No users found" || data.msg);
+                toast.info(data.msg || "No users found");
             } else {
                 toast.success("Users found");
             }
@@ -129,7 +129,7 @@ const Sidebar = () => {
                     src={authUser.profilePic || "/default-profile.png"}
                     alt="user"
                     className="rounded-circle profile-pic ms-3"
-                    onClick={() => navigate(`/profile/${user?._id}`)}
+                    onClick={() => navigate(`/profile/${authUser?._id}`)}
                 />
             </form>
             <hr style={{ color: "#fff" }} />
@@ -177,7 +177,7 @@ const Sidebar = () => {
                             <div className='userprofile flex-grow-1'>
                                 {chatUser.length === 0 ? (
                                     <>
-                                        <div className='d-flex flex-column justify-content-center align-items-center text-center' style={{height:"calc(100vh - 130px)"}}>
+                                        <div className='d-flex flex-column justify-content-center align-items-center text-center' style={{ height: "calc(100vh - 130px)" }}>
                                             <p className='fw-bolder fs-2'>Why are u alone!!🤭</p>
                                             <p className='fw-bolder fs-2'>search username to chat any rendom user</p>
                                             <i className="fas fa-users fs-1 text-dark"></i>
