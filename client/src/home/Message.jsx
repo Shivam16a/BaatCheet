@@ -51,7 +51,7 @@ const Message = () => {
       getMessages();
     }
   }, [selectedConversation, setMessages])
-  // console.log(messages);
+  console.log(messages);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -143,9 +143,6 @@ const Message = () => {
               <span className="fw-bold fs-5">
                 {selectedConversation?.username}
               </span>
-              <small className="text-light">
-                Online
-              </small>
             </div>
           </div>
 

@@ -196,3 +196,19 @@ body {
     background-color: #0d6efd;
     color: #fff;
 }
+
+.avatar-img.online::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border: 2px solid white;
+}
+
+.avatar-img {
+    position: relative;
+}

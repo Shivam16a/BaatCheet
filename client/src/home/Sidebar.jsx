@@ -4,6 +4,7 @@ import { useAuth } from "../context/authContext";
 import { toast } from "react-toastify"
 import userConversation from "../zustand/userConversation";
 import "./Home.css"
+import { useSocketContext } from '../context/socketContext';
 
 
 // const url = `http://localhost:5500/api/user/search?search=${searchInput}`;
@@ -14,9 +15,22 @@ const Sidebar = () => {
     const [searchUser, setSearchUser] = useState([]);
     const [chatUser, setChatUser] = useState([]);
     const [selestedUserId, setSelectedUserId] = useState(null);
-
-    const { setSelectedConversation } = userConversation();
+    const [newMessage, setNewMessage] = useState();
+    const { messages, setMessages, setSelectedConversation } = userConversation();
+    const { onlineUser, socket } = useSocketContext();
     const token = localStorage.getItem("token");
+    const { user: authUser, logoutUser } = useAuth();
+
+    const nowOnline = chatUser.map((user) => (user._id));
+
+    const isOnline = nowOnline.map(userId => onlineUser.includes(userId));
+
+    useEffect(() => {
+        socket?.on("newMessage", (newMessage) => {
+            setNewMessage(newMessage)
+        })
+        return () => socket?.off("newMessage")
+    }, [socket, messages])
 
 
     useEffect(() => {
@@ -73,7 +87,7 @@ const Sidebar = () => {
     const handeluserchick = (user) => {
         setSelectedConversation(user);
         setSelectedUserId(user._id);
-        // console.log("Selected user:", user);
+        setNewMessage('')
     }
 
     const handelclickback = () => {
@@ -81,8 +95,8 @@ const Sidebar = () => {
         setSearchInput('');
     }
     const handleLogout = () => {
-        const confirmlogout = window.prompt(`Type "${user.username}" To Logout`);
-        if (confirmlogout === user.username) {
+        const confirmlogout = window.prompt(`Type "${authUser.username}" To Logout`);
+        if (confirmlogout === authUser.username) {
             logoutUser();
             toast.success("you logout successfully");
         } else if (confirmlogout !== user.username) {
@@ -91,7 +105,6 @@ const Sidebar = () => {
             toast.info("Logout Cancel")
         }
     }
-    const { user, logoutUser } = useAuth();
     return <>
         <div className="container-fluid" style={{ marginTop: "1rem" }}>
             <form className="d-flex searchbtn align-items-center p-2" onSubmit={handleSearchSubmit}>
@@ -112,7 +125,7 @@ const Sidebar = () => {
                 />
                 <button className="btn btn-primary search-btn" type="submit">Search</button>
                 <img
-                    src={user.profilePic || "/default-profile.png"}
+                    src={authUser.profilePic || "/default-profile.png"}
                     alt="user"
                     className="rounded-circle profile-pic ms-3"
                     onClick={() => navigate(`/profile/${user?._id}`)}
@@ -126,7 +139,7 @@ const Sidebar = () => {
 
                             {/* Users list */}
                             <div className="list-group flex-grow-1 overflow-auto">
-                                {searchUser.map((user) => (
+                                {searchUser.map((user, index) => (
                                     <div
                                         key={user._id}
                                         className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""}`}
@@ -134,7 +147,7 @@ const Sidebar = () => {
                                         style={{ cursor: "pointer" }}
                                     >
                                         <div className="avatar d-flex align-items-center gap-3">
-                                            <div className="avatar-img">
+                                            <div className={`avatar-img ${isOnline[index] ? 'online' : ''}`}>
                                                 <img
                                                     src={user.profilePic || "/default-profile.png"}
                                                     alt={user.username}
@@ -183,8 +196,8 @@ const Sidebar = () => {
                                                             }`}
                                                         onClick={() => handeluserchick(user)}
                                                     >
-                                                        <div className="avatar d-flex align-items-center gap-3" style={{cursor:"pointer"}}>
-                                                            <div className="avatar-img">
+                                                        <div className="avatar d-flex align-items-center gap-3" style={{ cursor: "pointer" }}>
+                                                            <div className={`avatar-img ${isOnline[index] ? 'online' : ''}`}>
                                                                 <img
                                                                     src={user.profilePic}
                                                                     alt={user.username}
@@ -193,9 +206,19 @@ const Sidebar = () => {
                                                                     height={45}
                                                                 />
                                                             </div>
-                                                            <div className="avatar-name">
+                                                            <div className="avatar-name d-flex align-items-center">
                                                                 <span>{user.username}</span>
                                                             </div>
+                                                            <div>
+                                                                {newMessage &&
+                                                                    newMessage.senderId === user._id &&        // sidebar user
+                                                                    newMessage.reciverId === authUser._id ? (  // logged-in user
+                                                                    <div className='badge bg-success rounded-pill ms-2'>+1</div>
+                                                                ) : null}
+
+
+                                                            </div>
+
                                                         </div>
                                                     </div>
 
