@@ -183,7 +183,7 @@ const Sidebar = () => {
                                                             }`}
                                                         onClick={() => handeluserchick(user)}
                                                     >
-                                                        <div className="avatar d-flex align-items-center gap-3">
+                                                        <div className="avatar d-flex align-items-center gap-3" style={{cursor:"pointer"}}>
                                                             <div className="avatar-img">
                                                                 <img
                                                                     src={user.profilePic}
