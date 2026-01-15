@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import userConversation from '../zustand/userConversation'
 import { useAuth } from "../context/authContext";
+import { useSocketContext } from '../context/socketContext';
+import notify from "../assets/sound/mixkit-software-interface-start-2574.wav";
 const token = localStorage.getItem("token");
 
 
@@ -11,6 +13,18 @@ const Message = () => {
   const [logingMessages, setLodingMessages] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendData, setSendData] = useState("");
+  const {socket} = useSocketContext();
+
+
+  useEffect(()=>{
+    socket?.on("newMessage",(newMessage)=>{
+      const sound = new Audio(notify);
+      sound.play();
+      setMessages([...messages,newMessage])
+    })
+
+    return ()=>socket?.off("newMessage");
+  },[socket,setMessages,messages])
 
   useEffect(() => {
     if (!selectedConversation?._id) return;
