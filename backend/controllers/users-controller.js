@@ -1,26 +1,26 @@
-const User = require("../models/users-model.js");
-const Conversation = require("../models/conversation-model.js");
+const User = require('../models/users-model.js');
+const Conversation = require('../models/conversation-model.js');
 
 const searchUsers = async (req, res) => {
     try {
-        const search = req.query.search || ``;
+        const search = req.query.search || '';
         const CurrentUserId = req.user._id;
         const user = await User.find({
             $and: [
                 {
                     $or: [
-                        { username: { $regex: `.*` + search + `.*`, $options: `i` } },
+                        { username: { $regex: '.*' + search + '.*', $options: 'i' } },
                     ]
                 }, {
                     _id: { $ne: CurrentUserId }
                 }
             ]
-        }).select("-password")
+        }).select('-password');
 
         return res.status(200).json(user);
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ msg: "Error from users controller search users" });
+        return res.status(500).json({ msg: 'Error from users controller search users' });
     }
 };
 
@@ -53,7 +53,7 @@ const getCurrentChatters = async (req, res) => {
         // 3️⃣ Users fetch
         const users = await User.find({
             _id: { $in: otherUserIds }
-        }).select("-password");
+        }).select('-password');
 
         // 4️⃣ Order maintain karna (recent chat wale upar)
         const orderedUsers = otherUserIds
@@ -65,7 +65,7 @@ const getCurrentChatters = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            msg: "Error from users controller get current chatters"
+            msg: 'Error from users controller get current chatters'
         });
     }
 };

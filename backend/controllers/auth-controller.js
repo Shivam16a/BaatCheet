@@ -1,6 +1,6 @@
-const User = require("../models/users-model.js");
-const bcrypt = require("bcryptjs");
-const generatToken = require("../utils/jwtToken.js");
+const User = require('../models/users-model.js');
+const bcrypt = require('bcryptjs');
+const generatToken = require('../utils/jwtToken.js');
 
 const register = async (req, res) => {
     try {
@@ -11,13 +11,13 @@ const register = async (req, res) => {
         });
 
         if (userExist) {
-            return res.status(409).json({ msg: "User already exists" });
+            return res.status(409).json({ msg: 'User already exists' });
         }
 
         const hashpassword = bcrypt.hashSync(password, 10);
         const encodedUsername = encodeURIComponent(username);
         const defaultProfilePic =
-            gender === "male"
+            gender === 'male'
                 ? `https://api.dicebear.com/6.x/adventurer/svg?seed=${encodedUsername}`
                 : `https://api.dicebear.com/6.x/adventurer/svg?seed=${encodedUsername}`;
 
@@ -31,7 +31,7 @@ const register = async (req, res) => {
         });
 
         return res.status(201).json({
-            msg: "User created successfully",
+            msg: 'User created successfully',
             token: generatToken(newUser._id),
             userId: newUser._id.toString(),
             username: newUser.username,
@@ -41,7 +41,7 @@ const register = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ msg: "Internal server error" });
+        return res.status(500).json({ msg: 'Internal server error' });
     }
 };
 
@@ -51,22 +51,22 @@ const login = async (req, res) => {
 
         const userExist = await User.findOne({ email });
         if (!userExist) {
-            return res.status(401).json({ msg: "Invalid email or password" });
+            return res.status(401).json({ msg: 'Invalid email or password' });
         }
 
         const isMatch = await bcrypt.compare(password, userExist.password);
         if (!isMatch) {
-            return res.status(401).json({ msg: "Invalid email or password" });
+            return res.status(401).json({ msg: 'Invalid email or password' });
         }
 
         return res.status(200).json({
-            msg: "Login success",
+            msg: 'Login success',
             token: generatToken(userExist._id),
             userId: userExist._id.toString(),
         });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ msg: "Internal server error" });
+        return res.status(500).json({ msg: 'Internal server error' });
     }
 };
 
@@ -74,7 +74,7 @@ const user = async (req, res) => {
     try {
         return res.status(200).json(req.user);
     } catch (error) {
-        return res.status(500).json({ msg: "Something went wrong" });
+        return res.status(500).json({ msg: 'Something went wrong' });
     }
 };
 

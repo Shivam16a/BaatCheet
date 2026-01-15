@@ -1,6 +1,6 @@
-const Conversation = require("../models/conversation-model.js");
-const Message = require("../models/message-model.js");
-const { getReceiverSocketId, io } = require("../socket/socket.js");
+const Conversation = require('../models/conversation-model.js');
+const Message = require('../models/message-model.js');
+const { getReceiverSocketId, io } = require('../socket/socket.js');
 const sendMessage = async (req, res) => {
     try {
         const { message } = req.body;
@@ -9,11 +9,11 @@ const sendMessage = async (req, res) => {
 
         let chats = await Conversation.findOne({
             participants: { $all: [senderId, reciverId] }
-        })
+        });
         if (!chats) {
             chats = await Conversation.create({
                 participants: [reciverId, senderId],
-            })
+            });
         }
 
         const newMessage = new Message({
@@ -21,7 +21,7 @@ const sendMessage = async (req, res) => {
             reciverId,
             message,
             conversationId: chats._id
-        })
+        });
 
         chats.messages.push(newMessage._id);
 
@@ -30,12 +30,12 @@ const sendMessage = async (req, res) => {
 
         const reciverSocketId = getReceiverSocketId(reciverId);
         if(reciverSocketId){
-            io.to(reciverSocketId).emit("newMessage",newMessage)
+            io.to(reciverSocketId).emit('newMessage',newMessage);
         }
         return res.status(201).json(newMessage);
     } catch (error) {
         console.error(error);
-        return res.status(400).json("Error from message controller sendMessage");
+        return res.status(400).json('Error from message controller sendMessage');
     }
 };
 
@@ -46,17 +46,17 @@ const getMessages = async (req, res) => {
 
         const chats = await Conversation.findOne({
             participants: { $all: [senderId, reciverId] }
-        }).populate("messages")
+        }).populate('messages');
 
         if (!chats) {
-            return res.status(200).json([])
+            return res.status(200).json([]);
         }
         const message = chats.messages;
         return res.status(200).json(message);
     } catch (error) {
         console.error(error);
-        return res.status(400).json("Error from message controller getMessage");
+        return res.status(400).json('Error from message controller getMessage');
     }
-}
+};
 
 module.exports = { sendMessage, getMessages };

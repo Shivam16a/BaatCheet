@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     gender: {
         type: String,
         required: true,
-        enum: ["male", "female", "other"],
+        enum: ['male', 'female', 'other'],
     },
     password: {
         type: String,
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     },
     profilePic: {
         type: String,
-        default: "",
+        default: '',
     },
     isAdmin: {
         type: Boolean,
@@ -34,5 +34,5 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 module.exports = User;
