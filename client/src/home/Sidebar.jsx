@@ -7,7 +7,6 @@ import "./Home.css"
 import { useSocketContext } from '../context/socketContext';
 
 
-// const url = `http://localhost:5500/api/user/search?search=${searchInput}`;
 
 const Sidebar = () => {
     const navigate = useNavigate();
