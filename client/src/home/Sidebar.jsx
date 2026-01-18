@@ -14,7 +14,8 @@ const Sidebar = () => {
     const [searchUser, setSearchUser] = useState([]);
     const [chatUser, setChatUser] = useState([]);
     const [selestedUserId, setSelectedUserId] = useState(null);
-    const [newMessage, setNewMessage] = useState();
+    // const [newMessage, setNewMessage] = useState();
+    const [unreadMessages, setUnreadMessages] = useState({});
     const { messages, setSelectedConversation } = userConversation();
     const { onlineUser, socket } = useSocketContext();
     const token = localStorage.getItem("token");
@@ -25,12 +26,32 @@ const Sidebar = () => {
     };
 
 
+    // useEffect(() => {
+    //     socket?.on("newMessage", (newMessage) => {
+    //         setNewMessage(newMessage)
+    //     })
+    //     return () => socket?.off("newMessage")
+    // }, [socket, messages])
+
     useEffect(() => {
-        socket?.on("newMessage", (newMessage) => {
-            setNewMessage(newMessage)
-        })
-        return () => socket?.off("newMessage")
-    }, [socket, messages])
+        if (!socket) return;
+
+        const handleNewMessage = (msg) => {
+            if (msg.reciverId !== authUser._id) return;
+
+            // agar isi chat me ho → unread nahi
+            if (msg.senderId === selestedUserId) return;
+
+            setUnreadMessages(prev => ({
+                ...prev,
+                [msg.senderId]: (prev[msg.senderId] || 0) + 1
+            }));
+        };
+
+        socket.on("newMessage", handleNewMessage);
+        return () => socket.off("newMessage", handleNewMessage);
+    }, [socket, authUser._id, selestedUserId]);
+
 
 
     useEffect(() => {
@@ -51,8 +72,9 @@ const Sidebar = () => {
             }
         }
         chaUserHandler();
+        console.log(chatUser);
     }, [token]);
-    // console.log(chatUser);
+    
 
     const handleSearchSubmit = async (e) => {
         e.preventDefault();
@@ -87,8 +109,13 @@ const Sidebar = () => {
     const handeluserchick = (user) => {
         setSelectedConversation(user);
         setSelectedUserId(user._id);
-        setNewMessage('')
-    }
+
+        setUnreadMessages(prev => ({
+            ...prev,
+            [user._id]: 0
+        }));
+    };
+
 
     const handelclickback = () => {
         setSearchUser([]);
@@ -96,13 +123,13 @@ const Sidebar = () => {
     }
     const handleLogout = () => {
         const confirmlogout = window.prompt(`Type "${authUser.username}" To Logout`);
-        if (confirmlogout === authUser.username) {
+        if (!confirmlogout) {
+            toast.info("Logout cancelled");
+        } else if (confirmlogout === authUser.username) {
             logoutUser();
-            toast.success("you logout successfully");
-        } else if (confirmlogout !== authUser.username) {
-            toast.warning("Enter wright user name");
+            toast.success("Logged out successfully");
         } else {
-            toast.info("Logout Cancel")
+            toast.warning("Username does not match");
         }
     }
     return <>
@@ -212,12 +239,11 @@ const Sidebar = () => {
                                                                 <span>{user.username}</span>
                                                             </div>
                                                             <div>
-                                                                {newMessage &&
-                                                                    newMessage.senderId === user._id &&        // sidebar user
-                                                                    newMessage.reciverId === authUser._id ? (  // logged-in user
-                                                                    <div className='badge bg-success rounded-pill ms-2'>+1</div>
-                                                                ) : null}
-
+                                                                {unreadMessages[user._id] > 0 && (
+                                                                    <div className="badge bg-success rounded-pill ms-2">
+                                                                        +{unreadMessages[user._id]}
+                                                                    </div>
+                                                                )}
 
                                                             </div>
 

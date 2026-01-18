@@ -20,12 +20,44 @@ const Message = () => {
   useEffect(() => {
     socket?.on("newMessage", (newMessage) => {
       const sound = new Audio(notify);
-      sound.play();
+      sound.play().catch(() => { });
       setMessages([...messages, newMessage])
     })
 
     return () => socket?.off("newMessage");
-  }, [socket, setMessages])
+  }, [socket, setMessages,messages])
+
+
+  // purana wala code 
+  /*  useEffect(()=>{
+      socket?.on("newMessage",(newMessage)=>{
+        const sound = new Audio(notify);
+        sound.play();
+        setMessages([...messages,newMessage])
+      })
+  
+      return ()=>socket?.off("newMessage");
+    },[socket,setMessages,messages])*/
+
+
+
+  //new vala code 
+  /*useEffect(() => {
+    if (!socket) return;
+
+    const handleNewMessage = (newMessage) => {
+      const sound = new Audio(notify);
+      sound.play().catch(() => { });
+
+      // Functional update ensures we always use latest state
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+    };
+
+    socket.on("newMessage", handleNewMessage);
+
+    return () => socket.off("newMessage", handleNewMessage);
+  }, [socket, setMessages]);*/
+
 
   useEffect(() => {
     if (!selectedConversation?._id) return;
@@ -49,13 +81,13 @@ const Message = () => {
     if (selectedConversation?._id) {
       getMessages();
     }
+    console.log(messages);
   }, [selectedConversation, setMessages])
-  console.log(messages);
+
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
 
   const handelMessage = (e) => {
     setSendData(e.target.value);
