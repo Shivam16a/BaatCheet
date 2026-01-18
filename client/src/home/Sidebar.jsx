@@ -156,9 +156,15 @@ const Sidebar = () => {
                                                     height={45}
                                                 />
                                             </div>
-                                            <div className="avatar-name">
-                                                <span>{user.username}</span>
+                                            <div className="avatar-name d-flex flex-column lh-sm">
+                                                <span className="fw-semibold text-dark">
+                                                    {user.username}
+                                                </span>
+                                                <small className="text-muted">
+                                                    {user.gender}
+                                                </small>
                                             </div>
+
                                         </div>
                                     </div>
                                 ))}
@@ -220,7 +226,7 @@ const Sidebar = () => {
 
                                                     {/* Divider line */}
                                                     {index !== chatUser.length - 1 && (
-                                                        <hr style={{ color: "red" }} />
+                                                        <hr style={{ color: "#fff" }} />
                                                     )}
                                                 </React.Fragment>
                                             ))}

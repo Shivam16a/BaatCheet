@@ -3,10 +3,10 @@ import userConversation from '../zustand/userConversation'
 import { useAuth } from "../context/authContext";
 import { useSocketContext } from '../context/socketContext';
 import notify from "../assets/sound/mixkit-software-interface-start-2574.wav";
-const token = localStorage.getItem("token");
 
 
 const Message = () => {
+  const token = localStorage.getItem("token");
   const { user } = useAuth();
   const messagesEndRef = useRef(null);
   const { messages, selectedConversation, setSelectedConversation, setMessages } = userConversation();
@@ -14,6 +14,7 @@ const Message = () => {
   const [sending, setSending] = useState(false);
   const [sendData, setSendData] = useState("");
   const { socket } = useSocketContext();
+
 
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const Message = () => {
     })
 
     return () => socket?.off("newMessage");
-  }, [socket, setMessages, messages])
+  }, [socket, setMessages])
 
   useEffect(() => {
     if (!selectedConversation?._id) return;
@@ -39,14 +40,12 @@ const Message = () => {
         });
         const data = await message.json();
         setMessages(data);
-
         setLodingMessages(false);
       } catch (error) {
         console.log(error);
         setLodingMessages(false);
       }
     }
-
     if (selectedConversation?._id) {
       getMessages();
     }
