@@ -16,7 +16,7 @@ const Sidebar = () => {
     const [selestedUserId, setSelectedUserId] = useState(null);
     // const [newMessage, setNewMessage] = useState();
     const [unreadMessages, setUnreadMessages] = useState({});
-    const { messages, setSelectedConversation } = userConversation();
+    const { messages,selectedConversation, setSelectedConversation } = userConversation();
     const { onlineUser, socket } = useSocketContext();
     const token = localStorage.getItem("token");
     const { user: authUser, logoutUser } = useAuth();
@@ -169,7 +169,7 @@ const Sidebar = () => {
                                 {searchUser.map((user) => (
                                     <div
                                         key={user._id}
-                                        className={`list-group-item list-group-item-action user-row ${selestedUserId === user._id ? "active" : ""}`}
+                                        className={`list-group-item list-group-item-action user-row ${selectedConversation?._id === user._id ? "active" : ""}`}
                                         onClick={() => handeluserchick(user)}
                                         style={{ cursor: "pointer" }}
                                     >
