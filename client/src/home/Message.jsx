@@ -10,7 +10,7 @@ const Message = () => {
   const { user } = useAuth();
   const messagesEndRef = useRef(null);
 
-  const { messagesMap, selectedConversation, setMessages, addMessage } = userConversation();
+  const { messagesMap, selectedConversation, setSelectedConversation, setMessages, addMessage } = userConversation();
   const messages = selectedConversation?._id ? messagesMap[selectedConversation._id] || [] : [];
 
   const [logingMessages, setLodingMessages] = useState(false);
@@ -33,11 +33,11 @@ const Message = () => {
         (newMessage.senderId === selectedConversation?._id &&
           newMessage.reciverId === user._id);
 
-      
+
 
       if (isRelevant) {
         addMessage(selectedConversation._id, newMessage);
-        
+
       }
     };
 
@@ -128,7 +128,36 @@ const Message = () => {
     (msg.senderId === selectedConversation?._id && msg.reciverId === user._id)
   );
 
+  // DELETE MESSAGE 
+  const { removeMessage } = userConversation();
 
+  const handleDeleteMessage = async (messageId) => {
+    if (!window.confirm("Are you sure you want to delete this message?")) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5500/api/message/delete/${messageId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // ✅ Remove message from state
+        removeMessage(selectedConversation._id, messageId);
+      } else {
+        alert(data.error || "Failed to delete message");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div
@@ -219,7 +248,7 @@ const Message = () => {
                         ? "bg-primary text-white"
                         : "bg-light text-dark"
                         }`}
-                      style={{ maxWidth: "70%" }}
+                      style={{ maxWidth: "70%",position:"relative" }}
                     >
                       <p className="mb-1">{msg.message}</p>
 
@@ -232,7 +261,24 @@ const Message = () => {
                           minute: "2-digit",
                         })}
                       </div>
-
+                      {/* Delete Button only for my messages */}
+                      {isMyMessage && (
+                        <button
+                          onClick={() => handleDeleteMessage(msg._id)}
+                          style={{
+                            position: "absolute",
+                            top: "5px",
+                            right: "5px",
+                            border: "none",
+                            background: "transparent",
+                            color: isMyMessage ? "white" : "black",
+                            cursor: "pointer",
+                          }}
+                          title="Delete Message"
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      )}
                     </div>
 
                   </div>

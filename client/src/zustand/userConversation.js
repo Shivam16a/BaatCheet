@@ -4,7 +4,6 @@ const userConversation = create((set, get) => ({
     selectedConversation: null,
     setSelectedConversation: (conversation) => set({ selectedConversation: conversation }),
 
-    // object to store messages per conversation
     messagesMap: {},
 
     setMessages: (conversationId, messages) =>
@@ -20,6 +19,17 @@ const userConversation = create((set, get) => ({
                     ...(state.messagesMap[conversationId] || []),
                     message,
                 ],
+            },
+        })),
+
+    // ✅ REMOVE MESSAGE
+    removeMessage: (conversationId, messageId) =>
+        set((state) => ({
+            messagesMap: {
+                ...state.messagesMap,
+                [conversationId]: state.messagesMap[conversationId].filter(
+                    (msg) => msg._id !== messageId
+                ),
             },
         })),
 }));
