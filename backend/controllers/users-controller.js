@@ -70,5 +70,31 @@ const getCurrentChatters = async (req, res) => {
     }
 };
 
+const deleteCurrentChatters = async (req, res) => {
+    try {
+        const currentUserId = req.user._id;
+        const { otherUserId } = req.body; // ID of the user you want to remove from current chatters
 
-module.exports = { searchUsers, getCurrentChatters };
+        if (!otherUserId) {
+            return res.status(400).json({ msg: 'Other user ID is required' });
+        }
+
+        // Delete the conversation between current user and the other user
+        const deletedConvo = await Conversation.findOneAndDelete({
+            participants: { $all: [currentUserId, otherUserId] }
+        });
+
+        if (!deletedConvo) {
+            return res.status(404).json({ msg: 'Conversation not found' });
+        }
+
+        return res.status(200).json({ msg: 'Conversation deleted successfully' });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg: 'Error from users controller delete current chatters'
+        });
+    }
+};
+
+module.exports = { searchUsers, getCurrentChatters, deleteCurrentChatters };

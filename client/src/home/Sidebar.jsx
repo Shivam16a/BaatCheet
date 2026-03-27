@@ -25,14 +25,6 @@ const Sidebar = () => {
         return onlineUser?.includes(userId);
     };
 
-
-    // useEffect(() => {
-    //     socket?.on("newMessage", (newMessage) => {
-    //         setNewMessage(newMessage)
-    //     })
-    //     return () => socket?.off("newMessage")
-    // }, [socket, messages])
-
     useEffect(() => {
         if (!socket) return;
 
@@ -135,6 +127,47 @@ const Sidebar = () => {
             toast.warning("Username does not match");
         }
     }
+
+    // DELETE CHAT
+    const handleDeleteChatter = async (userId) => {
+        try {
+            const confirmDelete = window.confirm("Are you sure you want to delete this chat?");
+            if (!confirmDelete) return;
+
+            const res = await fetch(`http://localhost:5500/api/user/deleteCurrentChatter`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ otherUserId: userId })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success("Chat deleted");
+
+                // UI se bhi remove karo instantly
+                setChatUser(prev => prev.filter(user => user._id !== userId));
+
+                // agar wahi chat open tha → reset
+                if (selestedUserId === userId) {
+                    setSelectedConversation(null);
+                    setSelectedUserId(null);
+                }
+
+            } else {
+                toast.error(data.msg || "Failed to delete");
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast.error("Error deleting chat");
+        }
+    };
+
+
     return <>
         <div className="container-fluid">
             <form className="d-flex searchbtn align-items-center" onSubmit={handleSearchSubmit}>
@@ -249,6 +282,16 @@ const Sidebar = () => {
                                                                 )}
 
                                                             </div>
+
+                                                            {/* 🗑️ Delete Button */}
+                                                            <i
+                                                                className="fas fa-trash text-danger"
+                                                                style={{ cursor: "pointer" }}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation(); // ❗ important (chat open na ho)
+                                                                    handleDeleteChatter(user._id);
+                                                                }}
+                                                            ></i>
 
                                                         </div>
                                                     </div>
