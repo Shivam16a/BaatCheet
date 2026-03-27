@@ -16,7 +16,7 @@ const Sidebar = () => {
     const [selestedUserId, setSelectedUserId] = useState(null);
     // const [newMessage, setNewMessage] = useState();
     const [unreadMessages, setUnreadMessages] = useState({});
-    const { messages,selectedConversation, setSelectedConversation } = userConversation();
+    const { messages, selectedConversation, setSelectedConversation } = userConversation();
     const { onlineUser, socket } = useSocketContext();
     const token = localStorage.getItem("token");
     const { user: authUser, logoutUser } = useAuth();
@@ -40,7 +40,10 @@ const Sidebar = () => {
             if (msg.reciverId !== authUser._id) return;
 
             // agar isi chat me ho → unread nahi
-            if (msg.senderId === selestedUserId) return;
+            if (
+                msg.senderId === selestedUserId &&
+                selectedConversation?._id === selestedUserId
+            ) return;
 
             setUnreadMessages(prev => ({
                 ...prev,
@@ -74,7 +77,7 @@ const Sidebar = () => {
         chaUserHandler();
         console.log(chatUser);
     }, [token]);
-    
+
 
     const handleSearchSubmit = async (e) => {
         e.preventDefault();

@@ -9,90 +9,87 @@ const Message = () => {
   const token = localStorage.getItem("token");
   const { user } = useAuth();
   const messagesEndRef = useRef(null);
-  const { messages, selectedConversation, setSelectedConversation, setMessages } = userConversation();
+
+  const { messagesMap, selectedConversation, setMessages, addMessage } = userConversation();
+  const messages = selectedConversation?._id ? messagesMap[selectedConversation._id] || [] : [];
+
   const [logingMessages, setLodingMessages] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendData, setSendData] = useState("");
+
   const { socket } = useSocketContext();
 
-
-
+  // ✅ SOCKET FIX (FILTER + NO DUPLICATE)
   useEffect(() => {
-    socket?.on("newMessage", (newMessage) => {
-      const sound = new Audio(notify);
-      sound.play().catch(() => { });
-      setMessages([...messages, newMessage])
-    })
-
-    return () => socket?.off("newMessage");
-  }, [socket, setMessages,messages])
-
-
-  // purana wala code 
-  /*  useEffect(()=>{
-      socket?.on("newMessage",(newMessage)=>{
-        const sound = new Audio(notify);
-        sound.play();
-        setMessages([...messages,newMessage])
-      })
-  
-      return ()=>socket?.off("newMessage");
-    },[socket,setMessages,messages])*/
-
-
-
-  //new vala code 
-  /*useEffect(() => {
     if (!socket) return;
 
     const handleNewMessage = (newMessage) => {
       const sound = new Audio(notify);
       sound.play().catch(() => { });
 
-      // Functional update ensures we always use latest state
-      setMessages(prevMessages => [...prevMessages, newMessage]);
+      const isRelevant =
+        (newMessage.senderId === user._id &&
+          newMessage.reciverId === selectedConversation?._id) ||
+        (newMessage.senderId === selectedConversation?._id &&
+          newMessage.reciverId === user._id);
+
+      
+
+      if (isRelevant) {
+        addMessage(selectedConversation._id, newMessage);
+        
+      }
     };
 
     socket.on("newMessage", handleNewMessage);
 
     return () => socket.off("newMessage", handleNewMessage);
-  }, [socket, setMessages]);*/
+  }, [socket, selectedConversation?._id]);
 
-
+  // ✅ GET MESSAGES
   useEffect(() => {
     if (!selectedConversation?._id) return;
+
     const getMessages = async () => {
       try {
         setLodingMessages(true);
-        const message = await fetch(`http://localhost:5500/api/message/${selectedConversation._id}`, {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
+
+        const res = await fetch(
+          `http://localhost:5500/api/message/${selectedConversation._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           }
-        });
-        const data = await message.json();
-        setMessages(data);
-        setLodingMessages(false);
+        );
+
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          setMessages(selectedConversation._id, data);
+        }
       } catch (error) {
         console.log(error);
+      } finally {
         setLodingMessages(false);
       }
-    }
-    if (selectedConversation?._id) {
-      getMessages();
-    }
-    console.log(messages);
-  }, [selectedConversation, setMessages])
+    };
 
+    getMessages();
+  }, [selectedConversation?._id]);
 
+  // ✅ AUTO SCROLL
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // ✅ INPUT
   const handelMessage = (e) => {
     setSendData(e.target.value);
-  }
+  };
 
+  // ✅ SEND MESSAGE FIX
   const handelSubmit = async (e) => {
     e.preventDefault();
     if (!sendData.trim()) return;
@@ -100,34 +97,37 @@ const Message = () => {
     try {
       setSending(true);
 
-      const response = await fetch(
+      const res = await fetch(
         `http://localhost:5500/api/message/send/${selectedConversation?._id}`,
         {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            message: sendData,
-          }),
+          body: JSON.stringify({ message: sendData }),
         }
       );
 
-      const data = await response.json();
+      const data = await res.json();
 
-      // message list update
-      setMessages([...messages, data]);
+      // ✅ SAFE UPDATE
+      addMessage(selectedConversation._id, data);
 
       setSendData("");
-      setSending(false);
-
     } catch (error) {
       console.log(error);
     } finally {
       setSending(false);
     }
   };
+
+  // ✅ FILTER MESSAGES
+  const filteredMessages = messages.filter(msg =>
+    (msg.senderId === user._id && msg.reciverId === selectedConversation?._id) ||
+    (msg.senderId === selectedConversation?._id && msg.reciverId === user._id)
+  );
+
 
 
   return (
@@ -190,7 +190,7 @@ const Message = () => {
                   <span className="visually-hidden">Loading...</span>
                 </div>
               </div>
-            ) : messages.length === 0 ? (
+            ) : filteredMessages.length === 0 ? (
               <div className="d-flex flex-column justify-content-center align-items-center h-100 text-muted">
                 <i className="far fa-comment-dots fs-1 mb-3 text-primary opacity-75"></i>
 
@@ -205,8 +205,7 @@ const Message = () => {
               </div>
             ) : (
 
-              Array.isArray(messages) &&
-              messages.map((msg) => {
+              filteredMessages.map((msg) => {
                 const isMyMessage = msg.senderId === user._id;
 
                 return (
