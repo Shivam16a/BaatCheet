@@ -288,7 +288,7 @@ const Sidebar = () => {
                                                                 className="fas fa-trash text-danger"
                                                                 style={{ cursor: "pointer" }}
                                                                 onClick={(e) => {
-                                                                    e.stopPropagation(); // ❗ important (chat open na ho)
+                                                                    e.stopPropagation();
                                                                     handleDeleteChatter(user._id);
                                                                 }}
                                                             ></i>
