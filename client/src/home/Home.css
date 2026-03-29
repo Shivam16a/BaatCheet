@@ -97,6 +97,7 @@ body {
 
 /* Each user row */
 .user-row {
+    position: relative;
     border-bottom: 1px solid #dee2e6;
     padding: 10px 15px;
     margin-bottom: 5px;
@@ -208,4 +209,11 @@ body {
 
 .avatar-img {
     position: relative;
+}
+
+.fa-trash {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
 }

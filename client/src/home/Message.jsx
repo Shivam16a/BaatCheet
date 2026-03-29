@@ -267,7 +267,7 @@ const Message = () => {
                           onClick={() => handleDeleteMessage(msg._id)}
                           style={{
                             position: "absolute",
-                            top: "5px",
+                            top: "20px",
                             right: "5px",
                             border: "none",
                             background: "transparent",
